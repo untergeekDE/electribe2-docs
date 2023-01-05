@@ -47,12 +47,19 @@ This subchunk - which just contains sub-subchunk 3a - has a fixed length of 1188
 	- 0x004: 9C 04 00 00 (chunk length from here is 1180 bytes)
 - **Subchunk 3a: Electribe List**
 This sub-subchunk - containing the Electribe Sample metadata - has a fixed length of 1180 bytes. 
-	- 0x008: "esli" 
-	- 0x00C: 94 04 00 00 (chunk length from here is 1172 bytes)
-	- 0x010: xx xx 16-bit Osc Slot (starting at zero, so e.g. slot 501 - the first slot for user samples - is 0x1F4)
-	- 0x012-0021: Name (16 chars, unused: 00)
-	- 0x022: xx xx 16-bit Category (0x0011 = User) 
-	- 0x024: Absolute Sample No (seems to be a running number incremented each time a sample is imported)
+	- 0x08: "esli" 
+	- 0x0C: 94 04 00 00 (chunk length from here is 1172 bytes)
+	- 0x10: xx xx 16-bit Osc Slot (starting at zero, so e.g. slot 501 - the first slot for user samples - is 0x1F4)
+	- 0x12-0021: Name (16 chars, unused: 00)
+	- 0x22: xx xx 16-bit Category (0x0011 = User) 
+	- 0x24: Absolute Sample No (Osc Slot + 50, see line 844 [in e2sedit code](https://github.com/daveschroeter/e2sedit/blob/master/e2sEdit%20v1.java))
+	- 0x32: 16-bit Playback Period (63132-log2(samplerate)\*3072)
+	- 0x34: 16-bit Playback Volume
+	- 0x38: 32-bit Sample Start
+	- 0x3C: 32-bit Loop Point
+	- 0x40: 32-bit Loop End
+	- 0x44: Loop=0, One-Shot=1
+	
 This is all we need for reordering the samples - more details can be found [in this document on Github](https://gist.github.com/jack126guy/b2d38db0c96ca247ae1ad385e011fd78)  pulled from reverse-engineering the free editors [Oe2SLE](https://github.com/JonathanTaquet/Oe2sSLE)(Python-based), and [e2sedit](http://flosaic.com/e2sEdit/) (Java-based)
 ----
 The end of the subchunks 3/3a is also the end of the RIFF WAF block. The next block starts immediately after that.
